@@ -28,6 +28,9 @@ program projekt
                 call loadMatrix(matrix,size);
             case (2)
                 !generuj losowo
+                write(*,'(a)')"O jakim rozmiarze macierz wygenerowac:"
+                read(*,*)size
+                !
             case default
                 write(*,'(a)')'Podano nieprawidowa wartosc, sprobuj jeszcze raz'
         end select
@@ -61,7 +64,7 @@ subroutine callForAction(menu)
     if(.not.menu) then
 		write(*,"(a)")"Nacisnij dowolny przycisk zeby kontynuowac"
     else
-      write(*,"(a)") "Nacisnij dowolny przycisk zeby wrocic do menu glownego"
+      write(*,"(a)")"Nacisnij dowolny przycisk zeby wrocic do menu glownego"
     end if
 	read(*,*)
     
@@ -77,7 +80,7 @@ subroutine loadMatrix(matrix,size)
     write(*,"(a)", advance="no")"Podaj nazwe pliku wejciowego macierzy: "
     read(*,*)file1
     open(10,FILE=file1, STATUS='old')
-    write(*,"(a)", advance="no")"Podaj rozmiar macierzy b: "
+    write(*,"(a)", advance="no")"Podaj rozmiar macierzy: "
     read(*,*)size
     do i=1,size
 		read(10,*)(matrix(i,j),j=1,size)
@@ -106,5 +109,6 @@ subroutine displaySimpleMatrix(matrix,size)
     do i=1,size
        	write(*,'(20f6.1)')(matrix(i,j),j=1,size)
     end do
+    call callForAction(.true.)
     
 end subroutine
