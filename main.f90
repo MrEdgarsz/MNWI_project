@@ -6,7 +6,7 @@ program projekt
     integer choice;
     choice = 0;
     
-    do while(choice.lt.1.or.choice.gt.3)
+    do while(choice.lt.1.or.choice.gt.4)
         write(*,'(a)')"Zespol nr.1"
         write(*,'(a)')"Obliczanie wyznacznika macierzy kwadratowej."
         write(*,'(a)')"Przeksztalcenie jej do rownowaznej macierzy trojkatnej."
@@ -14,9 +14,11 @@ program projekt
         write(*,'(a)')"==== Menu Glowne ===="
         write(*,'(a)')"1. Wczytaj dane z pliku"
         write(*,'(a)')"2. Generuj losowa macierz"
+        write(*,'(a)')"3. Obliczanie wyznacznika"
+        write(*,'(a)')"4. Wyjscie z programu"
         write(*,'(a)', advance="no")"Podaj wybrana opcje: "
         read(*,*)choice
-        if(choice.lt.1.and.choice.gt.3) then
+        if(choice.lt.1.and.choice.gt.4) then
             write(*,"(a)")"Podano nieprawidlowa wartosc. Sproboj ponownie"
             call callForAction(.false.)
             continue
@@ -25,36 +27,41 @@ program projekt
         select case (choice)
             case (1)
                 write(*,'(a)') "Wczytywanie z pliku"
-                call loadMatrix(matrix,size);
+                call loadMatrix(matrix,size)
             case (2)
-                !generuj losowo
-                write(*,'(a)')"O jakim rozmiarze macierz wygenerowac:"
-                read(*,*)size
-                !
+                write(*,'(a)')"Generacja macierzy"
+                call generateMatrix(matrix,size)
+            case (3)
+                write(*,'(a)')"Obliczanie wyznacznika macierzy"
+                call calculateMatrix(matrix,size)
+            case (4)
+                EXIT
             case default
                 write(*,'(a)')'Podano nieprawidowa wartosc, sprobuj jeszcze raz'
-        end select
+            end select
+            choice = 0
+            call SYSTEM("cls")
     end do
 end program
 
     
-subroutine getSize(size)
-    implicit none
-    integer size,temp;
-    
-    size=0;
-    do while(size.eq.0)
-        write(*,'(a)',advance="no")"Podaj wymiar macierzy kwadratowej (max 20): "
-        read(*,*)temp
-        if((temp.gt.20).or.(temp.lt.2)) then
-            write(*,*)"Wymiar macierzy nie moze byc wiekszy niz 20 i mniejszy od 2."
-            continue
-        endif
-        size = temp
-    end do
-    return
-    
-end subroutine
+!subroutine getSize(size)
+!    implicit none
+!    integer size,temp;
+!    
+!    size=0;
+!    do while(size.eq.0)
+!        write(*,'(a)',advance="no")"Podaj wymiar macierzy kwadratowej (max 20): "
+!        read(*,*)temp
+!        if((temp.gt.20).or.(temp.lt.2)) then
+!            write(*,*)"Wymiar macierzy nie moze byc wiekszy niz 20 i mniejszy od 2."
+!            continue
+!        endif
+!        size = temp
+!    end do
+!    return
+!    
+!end subroutine
     
     
 subroutine callForAction(menu)
@@ -111,4 +118,83 @@ subroutine displaySimpleMatrix(matrix,size)
     end do
     call callForAction(.true.)
     
-end subroutine
+    end subroutine
+    
+    subroutine generateMatrix(matrix,size)
+    implicit none
+    real,dimension(20,20)::matrix
+    integer :: size,temp,i,j
+    size=0
+    do while(size.eq.0)
+        write(*,'(a)',advance="no")"Podaj wymiar macierzy kwadratowej (max 20): "
+        read(*,*)temp
+        if((temp.gt.20).or.(temp.lt.2)) then
+            write(*,*)"Wymiar macierzy nie moze byc wiekszy niz 20 i mniejszy od 2."
+            continue
+        endif
+        size = temp
+    end do
+    
+    call random_number(matrix)
+    do i=1,size
+        do j=1,size
+            matrix(i,j)=200*matrix(i,j)-100
+            matrix(i,j)=AINT(matrix(i,j))/10.0
+        end do !j
+    end do !i
+    call displaySimpleMatrix(matrix,size)
+    
+    end subroutine
+    
+    logical function checkRowsInMatrix(matrix,size)
+    implicit none
+    real, dimension(20,20), intent(in) :: matrix
+    real, dimension(20) :: temp
+    integer, intent(in) :: size
+    integer i,j,k,match
+    match=0
+    
+    do i=1,size-1
+        do k=i+1,size
+            do j=1,size
+                if(matrix(i,j).eq.matrix(k,j))then
+                    match=match+1
+                end if
+            end do!j
+        end do!k
+        if(match.ge.size)then
+            checkRowsInMatrix=.true.
+        end if!dwa s¹ takie same
+    match=0
+    end do!i  
+    
+    end function
+    
+    
+    subroutine calculateMatrix(matrix,size)
+    implicit none
+    real,dimension(20,20)::matrix,x,y,z
+    integer :: size,temp,i,j
+    logical checkRowsInMatrix
+    
+    if(checkRowsInMatrix(matrix,size))then
+        write(*,'(a)')"Dwa wiersze sa takie same, wyznacznik rowny 0."
+        call callForAction(.true.)
+        return
+    end if
+    
+    
+    call callForAction(.true.)
+    
+    end subroutine
+    
+    subroutine multiplyByThemselves(a,b,c,size)
+    implicit none
+    real, dimension(20,20) :: a,b,c
+    integer size,i,j,k
+    
+    write(*,*)"Tutaj tez cos kiedys bedzie"
+    
+    call callForAction(.true.)
+    
+    end subroutine
