@@ -77,7 +77,7 @@ subroutine calculateMatrix(matrix,size,rowSwaps)
     do i=1,size
     	det=det*matrix(i,i)
     end do
-    if(mod(rowSwaps,2).eq.1) then
+    if(rowSwaps.gt.0.and.mod(rowSwaps,2).eq.1) then
 		det = -det
     end if
    	write(*,"(a,f30.6)")"Wyznacznik macierzy wynosi: ",det

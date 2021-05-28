@@ -1,0 +1,13 @@
+Zamieniono wiersz  2 z wierszem  3
+Zamieniono wiersz  3 z wierszem  4
+Zamieniono wiersz  2 z wierszem  3
+Wyznaczanie macierzy trojkatnej gornej
+
+Wynikowa macierz trojkatna:
+
+      4.00     -1.00     -1.00      0.00
+      0.00     -1.00     -1.00      4.00
+      0.00      0.00      4.00     -2.00
+      0.00      0.00      0.00     -2.00
+
+Wyznacznik macierzy wynosi:                     -32.000000
