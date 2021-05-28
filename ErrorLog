@@ -1,3 +1,24 @@
-E:\dev\projekt_fortran\MNWI_project\main.F90(3) : warning 197 - Variable I has been declared but not used
-E:\dev\projekt_fortran\MNWI_project\main.F90(3) : warning 197 - Variable J has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(2) : warning 197 - Variable J has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(140) : warning 197 - Variable TEMP has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(149) : warning 179 - Comparing floating point quantities for equality may give misleading results
+E:\dev\projekt_fortran\MNWI_project\main.F90(168) : warning 197 - Variable X has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(168) : warning 197 - Variable Y has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(168) : warning 197 - Variable Z has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(169) : warning 197 - Variable TEMP has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(169) : warning 197 - Variable I has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(169) : warning 197 - Variable J has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(197) : warning 179 - Comparing floating point quantities for equality may give misleading results
+E:\dev\projekt_fortran\MNWI_project\main.F90(234) : warning 767 - The argument ROWSWAPS has not been used
+E:\dev\projekt_fortran\MNWI_project\main.F90(233) : warning 197 - Variable DIAGONAL has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(233) : warning 242 - Variable DET has been given a value but never used
+E:\dev\projekt_fortran\MNWI_project\main.F90(282) : warning 767 - The argument A has not been used
+E:\dev\projekt_fortran\MNWI_project\main.F90(282) : warning 767 - The argument B has not been used
+E:\dev\projekt_fortran\MNWI_project\main.F90(282) : warning 767 - The argument C has not been used
+E:\dev\projekt_fortran\MNWI_project\main.F90(283) : warning 767 - The argument SIZE has not been used
+E:\dev\projekt_fortran\MNWI_project\main.F90(283) : warning 197 - Variable I has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(283) : warning 197 - Variable J has been declared but not used
+E:\dev\projekt_fortran\MNWI_project\main.F90(283) : warning 197 - Variable K has been declared but not used
+WARNING the following symbols are missing:
+ELIMINATIONBASE                          E:\dev\projekt_fortran\MNWI_project\lgotemp@.obj
+                                              (E:\DEV\PROJEKT_FORTRAN\MNWI_PROJECT\MAIN.F90)
 Creating executable: E:\dev\projekt_fortran\MNWI_project\main.EXE

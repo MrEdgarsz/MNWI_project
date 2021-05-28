@@ -1,10 +1,10 @@
 program projekt
-    implicit none
-    integer size,i,j
+    integer size,i,j,rowSwaps
     real,dimension(20,20):: matrix
     
-    integer choice;
-    choice = 0;
+    integer choice
+    choice = 0
+    rowSwaps=0
     
     do while(choice.lt.1.or.choice.gt.4)
         write(*,'(a)')"Zespol nr.1"
@@ -19,7 +19,7 @@ program projekt
         write(*,'(a)', advance="no")"Podaj wybrana opcje: "
         read(*,*)choice
         if(choice.lt.1.and.choice.gt.4) then
-            write(*,"(a)")"Podano nieprawidlowa wartosc. Sproboj ponownie"
+            write(*,"(a)")"Podano nieprawidlowa wartosc. Sproboj ponownie."
             call callForAction(.false.)
             continue
         end if
@@ -33,7 +33,15 @@ program projekt
                 call generateMatrix(matrix,size)
             case (3)
                 write(*,'(a)')"Obliczanie wyznacznika macierzy"
-                call calculateMatrix(matrix,size)
+!                call calculateMatrix(matrix,size,rowSwaps)
+                 call decompose(matrix,size,P,rowSwaps)
+                 det=matrix(1,1)
+                 do i=1,size-1
+                   det=det*matrix(i,i)
+                 end do
+                 write(*,*)det
+                 call callForAction(.true.)
+                   
             case (4)
                 EXIT
             case default
@@ -43,26 +51,6 @@ program projekt
             call SYSTEM("cls")
     end do
 end program
-
-    
-!subroutine getSize(size)
-!    implicit none
-!    integer size,temp;
-!    
-!    size=0;
-!    do while(size.eq.0)
-!        write(*,'(a)',advance="no")"Podaj wymiar macierzy kwadratowej (max 20): "
-!        read(*,*)temp
-!        if((temp.gt.20).or.(temp.lt.2)) then
-!            write(*,*)"Wymiar macierzy nie moze byc wiekszy niz 20 i mniejszy od 2."
-!            continue
-!        endif
-!        size = temp
-!    end do
-!    return
-!    
-!end subroutine
-    
     
 subroutine callForAction(menu)
 	implicit none
@@ -152,6 +140,7 @@ subroutine displaySimpleMatrix(matrix,size)
     real, dimension(20) :: temp
     integer, intent(in) :: size
     integer i,j,k,match
+    
     match=0
     
     do i=1,size-1
@@ -159,22 +148,25 @@ subroutine displaySimpleMatrix(matrix,size)
             do j=1,size
                 if(matrix(i,j).eq.matrix(k,j))then
                     match=match+1
+                else
+                    match=0
                 end if
             end do!j
         end do!k
         if(match.ge.size)then
             checkRowsInMatrix=.true.
-        end if!dwa s¹ takie same
-    match=0
+        else
+            checkRowsInMatrix=.false.
+        end if!dwa sa takie same
     end do!i  
     
     end function
     
     
-    subroutine calculateMatrix(matrix,size)
+    subroutine calculateMatrix(matrix,size,rowSwaps)
     implicit none
     real,dimension(20,20)::matrix,x,y,z
-    integer :: size,temp,i,j
+    integer :: size,temp,i,j,rowSwaps
     logical checkRowsInMatrix
     
     if(checkRowsInMatrix(matrix,size))then
@@ -182,11 +174,108 @@ subroutine displaySimpleMatrix(matrix,size)
         call callForAction(.true.)
         return
     end if
-    
+    call checkDiagonalsForZeros(matrix,size,rowSwaps)
+    call eliminationBase(matrix,size,rowSwaps)
     
     call callForAction(.true.)
     
     end subroutine
+    
+subroutine checkDiagonalsForZeros(matrix,size,rowSwaps)
+	implicit none
+    real, dimension(20,20) :: matrix
+    integer, intent(in) :: size
+    integer :: rowSwaps
+    integer i
+    logical foundError
+
+   
+    foundError = .true.
+    do while (foundError)
+        foundError = .false.
+        do i=1,size
+            if(matrix(i,i).eq.0.0)then
+               write(*,'(a,i2,a,i2)')"Zamieniono wiersz ",i," z wierszem ",i+1
+               write(10,'(a,i2,a,i2)')"Zamieniono wiersz ",i," z wiersze ",i+1            
+               call replaceRow(matrix,size,i)
+               rowSwaps=rowSwaps+1
+               foundError = .true.
+            end if
+        end do
+    end do
+    
+end subroutine
+    
+subroutine replaceRow(matrix,size,i)
+    implicit none
+    real,dimension(20,20)::matrix
+    real,dimension(20)::temp
+    integer, intent(in)::size,i
+    integer k
+    do k=1,size
+      if(i+1.gt.size)then
+        temp(k)=matrix(i,k)
+        matrix(i-1,k)=matrix(i,k)
+        matrix(i-1,k)=temp(k)
+      else
+        temp(k)=matrix(i+1,k)
+        matrix(i+1,k)=matrix(i,k)
+        matrix(i,k)=temp(k)
+      end if
+    end do
+    end subroutine    
+    
+    subroutine decompose(matrix,size,P,rowSwaps)
+    real, dimension(20,20)::matrix
+    real,dimension(20)::P,ptr
+    integer, intent(in) :: size
+    integer z
+    real diagonal,det,maxA,absA
+    integer i,j,k,rowSwaps,imax
+    det=0
+    
+    do i=1,size
+      P(i)=i
+    end do
+
+    do i=1,size-1
+        maxA=0.0
+        imax=i
+            
+        do k=i,size-1
+          absA=abs(matrix(k,i))
+          if(absA.gt.maxA)then
+            maxA=absA
+            imax=k
+          end if
+        end do!K
+          if(imax.ne.i)then
+            j=P(i)
+            P(i)=P(imax)
+            P(imax)=j
+            do z=1,size
+            ptr(z)=matrix(i,z)
+            matrix(i,z)=matrix(imax,z)
+            matrix(imax,z)=ptr(z)
+            end do
+
+            P(size)=P(size)+1
+          end if
+          
+          do j=i+1,size-1
+            matrix(j,i) = matrix(j,i) / matrix(i,i)
+            do k=i+1,size-1
+              matrix(j,k)=matrix(j,k)-(matrix(j,i)*matrix(i,k))
+            end do
+          end do
+    end do!i
+    call displaySimpleMatrix(matrix,size)
+end subroutine
+
+
+
+
+    
     
     subroutine multiplyByThemselves(a,b,c,size)
     implicit none
